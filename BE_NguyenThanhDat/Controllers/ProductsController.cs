@@ -15,11 +15,51 @@ namespace BE_NguyenThanhDat.Controllers
         private AppDbContext db = new AppDbContext();
 
         // GET: Products
-        public ActionResult Index()
+        public ActionResult Index(string search, string sort, int page = 1, int pageSize = 10)
         {
-            var products = db.Products.Include(p => p.Category);
-            return View(products.ToList());
+            IQueryable<Product> query = db.Products.Include(p => p.Category);
+
+            // Search
+            if (!string.IsNullOrEmpty(search))
+                query = query.Where(p => p.ProductName.Contains(search));
+
+            // Sort
+            switch (sort)
+            {
+                case "name_asc":
+                    query = query.OrderBy(p => p.ProductName);
+                    break;
+
+                case "name_desc":
+                    query = query.OrderByDescending(p => p.ProductName);
+                    break;
+
+                case "price_asc":
+                    query = query.OrderBy(p => p.ProductPrice);
+                    break;
+
+                case "price_desc":
+                    query = query.OrderByDescending(p => p.ProductPrice);
+                    break;
+
+                default:
+                    query = query.OrderBy(p => p.ProductID);
+                    break;
+            }
+
+            // Pagination
+            int totalItems = query.Count();
+            var data = query.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+            ViewBag.Search = search;
+            ViewBag.Sort = sort;
+            ViewBag.Page = page;
+            ViewBag.TotalItems = totalItems;
+            ViewBag.PageSize = pageSize;
+
+            return View(data);
         }
+
 
         // GET: Products/Details/5
         public ActionResult Details(int? id)
