@@ -1,0 +1,18 @@
+﻿@model BE_NguyenThanhDat.Models.Product
+
+@{
+    ViewBag.Title = "Chi tiết sản phẩm";
+}
+
+<h2>@Model.ProductName</h2>
+
+<p>Danh mục: @Model.Category.CategoryName</p>
+<p>Mô tả: @Model.ProductDecription</p>
+<p>Giá: @Model.ProductPrice</p>
+
+@if (!string.IsNullOrEmpty(Model.ProductImage))
+{
+    <img src="@Model.ProductImage" style="max-width:300px;" />
+}
+
+<p>@Html.ActionLink("Quay lại", "Index", "Product")</p>

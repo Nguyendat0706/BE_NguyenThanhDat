@@ -1,0 +1,45 @@
+﻿@model IEnumerable<BE_NguyenThanhDat.Models.Product>
+
+@{
+    ViewBag.Title = "Danh sách sản phẩm";
+
+    int current = ViewBag.Page;
+    int totalItems = ViewBag.TotalItems;
+    int pageSize = ViewBag.PageSize;
+    int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+}
+
+<h2>Danh sách sản phẩm</h2>
+
+@using (Html.BeginForm("Index", "Product", FormMethod.Get))
+{
+    <input type="text" name="search" value="@ViewBag.Search" placeholder="Tìm kiếm..." />
+    <button type="submit">Search</button>
+}
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-3" style="border:1px solid #ddd; margin:5px; padding:10px;">
+            <h4>@item.ProductName</h4>
+            <p>Giá: @item.ProductPrice</p>
+            <p>
+                @Html.ActionLink("Xem chi tiết", "Details", "Product", new { id = item.ProductID }, null)
+            </p>
+        </div>
+    }
+</div>
+
+<div style="margin-top:20px;">
+    @if (current > 1)
+    {
+        @Html.ActionLink("Prev", "Index", new { page = current - 1, search = ViewBag.Search })
+    }
+
+    <span> Trang @current / @totalPages </span>
+
+    @if (current < totalPages)
+    {
+        @Html.ActionLink("Next", "Index", new { page = current + 1, search = ViewBag.Search })
+    }
+</div>
