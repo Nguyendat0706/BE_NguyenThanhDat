@@ -1,0 +1,58 @@
+﻿@model List<BE_NguyenThanhDat.Controllers.CartItem>
+
+@{
+    ViewBag.Title = "Giỏ hàng";
+}
+
+<h2>Giỏ hàng</h2>
+
+@if (Model.Count == 0)
+{
+    <p>Giỏ hàng trống.</p>
+    <p>@Html.ActionLink("Tiếp tục mua hàng", "Index", "Product")</p>
+}
+else
+{
+    <table class="table">
+        <tr>
+            <th>Sản phẩm</th>
+            <th>Giá</th>
+            <th>Số lượng</th>
+            <th>Tổng</th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Product.ProductName</td>
+                <td>@item.Product.ProductPrice</td>
+
+                <td>
+                    @using (Html.BeginForm("Update", "Cart"))
+                    {
+                        <input type="hidden" name="id" value="@item.Product.ProductID" />
+                        <input type="number" name="quantity" value="@item.Quantity" min="1" />
+                        <button type="submit">Update</button>
+                    }
+                </td>
+
+                <td>@(item.Product.ProductPrice * item.Quantity)</td>
+
+                <td>
+                    @Html.ActionLink("Xóa", "Remove", new { id = item.Product.ProductID })
+                </td>
+            </tr>
+        }
+
+    </table>
+
+    <h3>
+        Tổng tiền: @Model.Sum(x => x.Product.ProductPrice * x.Quantity)
+    </h3>
+
+    <p>
+        @Html.ActionLink("Xóa giỏ hàng", "Clear") |
+        @Html.ActionLink("Tiếp tục mua hàng", "Index", "Product")
+    </p>
+}

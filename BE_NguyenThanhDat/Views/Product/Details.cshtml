@@ -10,6 +10,11 @@
 <p>Mô tả: @Model.ProductDecription</p>
 <p>Giá: @Model.ProductPrice</p>
 
+<p>
+    @Html.ActionLink("Thêm vào giỏ", "Add", "Cart", new { id = Model.ProductID }, null)
+</p>
+
+
 @if (!string.IsNullOrEmpty(Model.ProductImage))
 {
     <img src="@Model.ProductImage" style="max-width:300px;" />

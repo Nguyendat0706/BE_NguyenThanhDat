@@ -41,4 +41,12 @@ namespace BE_NguyenThanhDat.Controllers
 
             var product = db.Products
                 .Include("Category")
-                .FirstOrDefault(p
+                .FirstOrDefault(p => p.ProductID == id);
+
+            if (product == null)
+                return HttpNotFound();
+
+            return View(product);
+        }
+    }
+}
